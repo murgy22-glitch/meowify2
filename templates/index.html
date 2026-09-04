@@ -1,44 +1,97 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
 
-{% block head %}
-<title> {{ title }}</title>
-{% endblock %}
+    <title>Meowify</title>
 
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
 
-{% block body %}
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+            background: #fafafa;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            font-size: 18px;
+        }
+
+        input[type="file"] {
+            margin: 30px 0;
+            padding: 15px;
+        }
+
+        button {
+            display: block;
+            margin: auto;
+            padding: 14px 30px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .formats {
+            font-size: 14px;
+            color: #888;
+            margin-top: 20px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
 <div class="container">
-    <div class="row">
-      <form action="/" method="POST">
-        <div class="col s12">
-          <div class="card z-depth-0">
-            <div class="card-content">
-              <span class="card-title">
-                <div class="animated bounce">
-                  <h4>{{ title }}</h4>
-                </div>
-              </span>
-              <div class="row">
-                <div class="input-field col s12 m10">
-                  <input id="url" type="text" name="url" value="{{request.form.url}}">
-                  <label for="text">Enter a Youtube URL</label>
-                </div>
-                </div>
 
-              </div>
-            </div>
-      </form>
-      </div>
-      </div>
+    <h1>🐱 Meowify</h1>
+
+    <p>
+        Turn the vocals of your song into cat meows.
+    </p>
+
+    <form
+        action="/upload"
+        method="POST"
+        enctype="multipart/form-data"
+    >
+
+        <input
+            type="file"
+            name="audio"
+            accept=".mp3,.wav,.m4a,.flac,.ogg,.aac"
+            required
+        >
+
+        <button type="submit">
+            MEOWIFY IT 🐱
+        </button>
+
+    </form>
+
+    <div class="formats">
+        MP3, WAV, M4A, FLAC, OGG or AAC<br>
+        Maximum file size: 100 MB
     </div>
 
-  <img class="center" src="{{ img }}">
-  </div>
+</div>
 
-  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $('select').material_select();
-    });
-  </script>
-{% endblock %}
+</body>
+</html>
