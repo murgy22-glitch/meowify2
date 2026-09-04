@@ -35,7 +35,7 @@ from scipy.io import wavfile
 from pydub import AudioSegment
 import tempfile
 
-def write_to_file(audio_file, model_dir, output, sample_rate = DEFAULT_SAMPLE_RATE):
+def write_to_file(audio_file, model_dir, output, sample_rate=16000):
 	audio_float = audio_file_to_np(audio_file)
 	cat_audio_float = tranfer(audio_float, model_dir, sample_rate=sample_rate)
 	if len(cat_audio_float.shape) == 2:
