@@ -100,7 +100,6 @@ def separate_audio(input_file, output_directory):
             input_file,
             "-o",
             output_directory,
-            "--mwf=False",
         ],
         name="Spleeter",
     )
@@ -365,4 +364,3 @@ def process_audio(input_file, job_id):
             job_id,
             input_file
         )
-
