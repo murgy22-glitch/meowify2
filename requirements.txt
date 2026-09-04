@@ -12,6 +12,7 @@ crepe==0.0.11
 ddsp==0.13.1
 gin-config==0.3.0
 tensorflow==2.3.0
+tensorflow-probability==0.11.1
 scipy==1.4.1
 numpy==1.18.5
 librosa==0.8.0
