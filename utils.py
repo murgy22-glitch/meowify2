@@ -1,4 +1,3 @@
-```python
 import os
 import shutil
 import subprocess
@@ -366,4 +365,4 @@ def process_audio(input_file, job_id):
             job_id,
             input_file
         )
-```
+
