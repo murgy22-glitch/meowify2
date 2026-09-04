@@ -1,3 +1,4 @@
+```python
 import os
 import shutil
 import subprocess
@@ -100,6 +101,7 @@ def separate_audio(input_file, output_directory):
             input_file,
             "-o",
             output_directory,
+            "--mwf=False",
         ],
         name="Spleeter",
     )
@@ -301,13 +303,8 @@ def process_audio(input_file, job_id):
             job_id + "_meows.wav"
         )
 
-        # IMPORTANT:
-        #
         # DDSP is imported HERE rather than when
         # Gunicorn starts.
-        #
-        # This means Spleeter doesn't have to share
-        # memory with the DDSP/TensorFlow models.
 
         from ddsp_timbre_transfer import write_to_file
 
@@ -365,9 +362,8 @@ def process_audio(input_file, job_id):
 
     finally:
         # Don't delete the final output.
-        #
-        # Everything used to create it can go.
         cleanup_job(
             job_id,
             input_file
         )
+```
