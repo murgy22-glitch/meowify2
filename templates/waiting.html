@@ -1,32 +1,117 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
 
-{% block head %}
-<h4> We are processing your request... </h4>
-{% endblock %}
+    <title>Meowify - Processing</title>
 
-{% block body %}
-<div>
-	<img class="center" src="{{ img }}">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+            background: #fafafa;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 40px;
+        }
+
+        .spinner {
+            margin: 40px auto;
+            width: 60px;
+            height: 60px;
+            border: 6px solid #ddd;
+            border-top: 6px solid #333;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #status {
+            color: #666;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🐱 MEOWING...</h1>
+
+    <p>
+        Processing:
+        <strong>{{ filename }}</strong>
+    </p>
+
+    <div class="spinner"></div>
+
+    <p id="status">
+        Separating vocals and preparing the cats...
+    </p>
+
 </div>
-<script type="text/javascript">
-	var request = new XMLHttpRequest();
-	request.open('POST', '/processing');
 
-	request.onload = function() {
-	  if (request.status === 200 && request.responseText === 'done') {
-	    // long process finished successfully, redirect user
-	    window.location = '/success';
-	  } else {
-	    // ops, we got an error from the server
-	    alert('Something went wrong.');
-	  }
-	};
+<script>
 
-	request.onerror = function() {
-	  // ops, we got an error trying to talk to the server
-	  alert('Something went wrong.');
-	};
+var request = new XMLHttpRequest();
 
-	request.send();
+request.open(
+    "POST",
+    "/processing"
+);
+
+request.onload = function() {
+
+    if (
+        request.status === 200 &&
+        request.responseText === "done"
+    ) {
+
+        window.location.href = "/success";
+
+    } else {
+
+        document.getElementById(
+            "status"
+        ).innerText =
+            "Something went wrong. Check the Render logs.";
+
+    }
+
+};
+
+request.onerror = function() {
+
+    document.getElementById(
+        "status"
+    ).innerText =
+        "Connection error. Check the Render logs.";
+
+};
+
+request.send();
+
 </script>
-{% endblock %}
+
+</body>
+</html>
