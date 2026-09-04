@@ -23,6 +23,7 @@ app.secret_key = os.environ.get(
     "meowify-development-secret"
 )
 
+# Maximum upload size: 100 MB
 app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024
 
 UPLOAD_FOLDER = "uploads"
@@ -30,6 +31,7 @@ OUTPUT_FOLDER = "outputs"
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
 
 ALLOWED_EXTENSIONS = {
     "mp3",
@@ -72,6 +74,7 @@ def upload():
             400,
         )
 
+    # Generate a unique ID for this processing job
     job_id = uuid.uuid4().hex
 
     extension = file.filename.rsplit(".", 1)[1].lower()
@@ -87,6 +90,7 @@ def upload():
 
     file.save(filepath)
 
+    # Store job information in the session
     session["input_file"] = filepath
     session["job_id"] = job_id
     session["original_name"] = file.filename
@@ -96,9 +100,13 @@ def upload():
 
 @app.route("/waiting")
 def waiting():
+
     return render_template(
         "waiting.html",
-        filename=session.get("original_name", "audio")
+        filename=session.get(
+            "original_name",
+            "audio"
+        )
     )
 
 
@@ -116,12 +124,23 @@ def processing():
 
     try:
 
+        print("========================================")
+        print("MEOWIFY PROCESSING STARTED")
+        print("========================================")
+        print("Input:", input_file)
+        print("Job ID:", job_id)
+
         output_file = process_audio(
             input_file,
             job_id
         )
 
         session["output_file"] = output_file
+
+        print("========================================")
+        print("MEOWIFY PROCESSING FINISHED")
+        print("========================================")
+        print("Output:", output_file)
 
         return "done"
 
@@ -130,7 +149,7 @@ def processing():
         print("========================================")
         print("MEOWIFY PROCESSING ERROR")
         print("========================================")
-        print(e)
+        print(repr(e))
         print("========================================")
 
         return "processing_error", 500
@@ -156,7 +175,10 @@ def download():
 
     output_file = session.get("output_file")
 
-    if not output_file or not os.path.exists(output_file):
+    if not output_file:
+        return "No output file available.", 404
+
+    if not os.path.exists(output_file):
         return "Output file not found.", 404
 
     return send_file(
@@ -169,8 +191,10 @@ def download():
 
 @app.errorhandler(413)
 def too_large(error):
+
     return (
-        "That file is too large. Maximum upload size is 100 MB.",
+        "That file is too large. "
+        "Maximum upload size is 100 MB.",
         413,
     )
 
@@ -178,7 +202,10 @@ def too_large(error):
 if __name__ == "__main__":
 
     port = int(
-        os.environ.get("PORT", 10000)
+        os.environ.get(
+            "PORT",
+            10000
+        )
     )
 
     app.run(
