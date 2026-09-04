@@ -1,5 +1,5 @@
 import re
-from youtube_dl import YoutubeDL
+from yt_dlp import YoutubeDL
 from spleeter.separator import Separator
 import os
 from ddsp_timbre_transfer import write_to_file
