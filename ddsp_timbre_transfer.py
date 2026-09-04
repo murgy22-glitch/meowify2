@@ -24,10 +24,6 @@ import time
 import crepe
 import ddsp
 import ddsp.training
-from ddsp.colab.colab_utils import (
-	auto_tune, detect_notes, fit_quantile_transform, 
-	get_tuning_factor, download, play, record, 
-	specplot, upload, DEFAULT_SAMPLE_RATE)
 import gin
 import librosa
 import matplotlib.pyplot as plt
