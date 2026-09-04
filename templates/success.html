@@ -1,16 +1,73 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
 
-{% block head %}
-<h2>{{ title }}, but meowified</h2>
-{% endblock %}
+    <title>Meowify - Complete</title>
 
-{% block body %}
-<div>
-	<img class="center" src="{{ img }}">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+            background: #fafafa;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 48px;
+        }
+
+        a {
+            display: inline-block;
+            margin: 15px;
+            padding: 15px 30px;
+            text-decoration: none;
+            background: #222;
+            color: white;
+            border-radius: 5px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🐱 MEOWIFIED!</h1>
+
+    <p>
+        Your song has been successfully transformed
+        into glorious feline music.
+    </p>
+
+    <p>
+        {{ filename }}
+    </p>
+
+    <a href="/download">
+        DOWNLOAD THE MEOW 🐱
+    </a>
+
+    <br>
+
+    <a href="/">
+        MEOWIFY ANOTHER SONG
+    </a>
+
 </div>
 
-<audio controls autoplay>
-  <source src="{{ vocals }}" type="audio/wav">
-</audio> 
-
-{% endblock %}
+</body>
+</html>
