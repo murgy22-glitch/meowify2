@@ -1,4 +1,4 @@
-```python
+
 import os
 import subprocess
 
@@ -192,4 +192,4 @@ def process_audio(input_file, job_id):
     print("========================================")
 
     return output
-```
+
