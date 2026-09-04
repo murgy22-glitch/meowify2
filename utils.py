@@ -1,3 +1,4 @@
+```python
 import os
 import subprocess
 
@@ -53,9 +54,10 @@ def separate_audio(input_file, output_directory):
         "separate",
         "-p",
         "spleeter:2stems",
+        "-i",
+        input_file,
         "-o",
         output_directory,
-        input_file,
     ])
 
 
@@ -190,3 +192,4 @@ def process_audio(input_file, job_id):
     print("========================================")
 
     return output
+```
