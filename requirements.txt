@@ -7,11 +7,10 @@ click==7.1.2
 gunicorn==20.0.4
 regex==2020.5.14
 
-yt-dlp
-
 spleeter==2.0
 crepe==0.0.11
 ddsp==0.13.1
+
 IPython==7.16.3
 gin-config==0.3.0
 
