@@ -1,47 +1,90 @@
-from flask import Flask, render_template, url_for, request, redirect, session, send_from_directory
-from utils import *
+import os
+
+from flask import Flask, render_template, request, session
+
+from utils import (
+    verify,
+    download,
+    split_vocals,
+    meowify,
+    merge_meows_and_music,
+)
+
 
 app = Flask(__name__)
-app.secret_key = "supposed to be a secret"
 
-@app.route('/processing', methods=['GET', 'POST'])
+# Use Render's SECRET_KEY environment variable.
+app.secret_key = os.environ.get("SECRET_KEY", "development-secret-key")
+
+
+@app.route("/processing", methods=["GET", "POST"])
 def processing():
-	if request.method == 'GET':
-		return render_template('waiting.html', img="/static/images/waiting.jpg")
+    if request.method == "GET":
+        return render_template(
+            "waiting.html",
+            img="/static/images/waiting.jpg"
+        )
 
-	if request.method == 'POST':
-		download(session)
-		split_vocals(session)
-		meowify(session)
-		merge_meows_and_music(session)
-		return 'done'
+    try:
+        download(session)
+        split_vocals(session)
+        meowify(session)
+        merge_meows_and_music(session)
 
-@app.route('/success', methods=['GET'])
+        return "done"
+
+    except Exception as exc:
+        app.logger.exception("Meowify processing failed")
+        return "Processing failed: {}".format(exc), 500
+
+
+@app.route("/success", methods=["GET"])
 def success():
-	return render_template("success.html", title=session.get('title'), vocals=session.get('final'), img="/static/images/singing.jpg")
+    return render_template(
+        "success.html",
+        title=session.get("title"),
+        vocals=session.get("final"),
+        img="/static/images/singing.jpg",
+    )
 
-@app.route('/', methods=['POST', 'GET'])
+
+@app.route("/", methods=["GET", "POST"])
 def index():
-	
-	title = "Meowify"
+    title = "Meowify"
 
-	if request.method == "POST":
-	
-		session['requested_url'] = request.form["url"]
-		if session.get('requested_url') != "":
-			if verify(session.get('requested_url')):
-				return render_template("waiting.html", img="/static/images/waiting.jpg")
-			else:
-				return render_template(
-					"index.html", title="That's not a youtube URL, are you kittying me?",
-					img="/static/images/angry_kitty.jpg")
-		else:
-			return render_template(
-				"index.html", title="That's an empty URL, are you kittying me?",
-				img="/static/images/angrier_kitty.jpg")
-	
-	else:
-		return render_template("index.html", title=title, img="/static/images/starting.png")
+    if request.method == "POST":
+        requested_url = request.form.get("url", "").strip()
+        session["requested_url"] = requested_url
+
+        if not requested_url:
+            return render_template(
+                "index.html",
+                title="That's an empty URL, are you kittying me?",
+                img="/static/images/angrier_kitty.jpg",
+            )
+
+        if verify(requested_url):
+            return render_template(
+                "waiting.html",
+                img="/static/images/waiting.jpg"
+            )
+
+        return render_template(
+            "index.html",
+            title="That's not a youtube URL, are you kittying me?",
+            img="/static/images/angry_kitty.jpg",
+        )
+
+    return render_template(
+        "index.html",
+        title=title,
+        img="/static/images/starting.png",
+    )
+
 
 if __name__ == "__main__":
-	app.run(debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 5000)),
+        debug=False,
+    )
